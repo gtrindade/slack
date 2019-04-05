@@ -81,14 +81,15 @@ func NewPostMessageParameters() PostMessageParameters {
 }
 
 // DeleteEphemeral deletes last ephemeral message in a channel
-func (api *Client) DeleteEphemeral(channel string) (*SlackResponse, error) {
+func (api *Client) DeleteEphemeral(channel, messageTs string) (*SlackResponse, error) {
 	json := []byte(fmt.Sprintf(`{
     'response_type': 'ephemeral',
     'text': '',
 		'channel': '%s',
+		'ts': '%s',
     'replace_original': true,
     'delete_original': true
-	}`, channel))
+	}`, channel, messageTs))
 	response := &SlackResponse{}
 	endpoint := api.endpoint + "chat.update"
 	err := postJSON(context.Background(), api.httpclient, endpoint, api.token, json, response, api)
