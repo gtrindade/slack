@@ -3,7 +3,6 @@ package slack
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/url"
 
 	"github.com/gtrindade/slack/slackutilsx"
@@ -81,18 +80,15 @@ func NewPostMessageParameters() PostMessageParameters {
 }
 
 // DeleteEphemeral deletes last ephemeral message in a channel
-func (api *Client) DeleteEphemeral(channel, messageTs string) (*SlackResponse, error) {
-	json := []byte(fmt.Sprintf(`{
+func (api *Client) DeleteEphemeral(channel, messageTs, responseURL string) (*SlackResponse, error) {
+	json := []byte(`{
     'response_type': 'ephemeral',
     'text': '',
-		'channel': '%s',
-		'ts': '%s',
     'replace_original': true,
     'delete_original': true
-	}`, channel, messageTs))
+	}`)
 	response := &SlackResponse{}
-	endpoint := api.endpoint + "chat.update"
-	err := postJSON(context.Background(), api.httpclient, endpoint, api.token, json, response, api)
+	err := postJSON(context.Background(), api.httpclient, responseURL, api.token, json, response, api)
 	return response, err
 }
 
