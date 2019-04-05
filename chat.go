@@ -79,6 +79,19 @@ func NewPostMessageParameters() PostMessageParameters {
 	}
 }
 
+// DeleteEphemeral deletes last ephemeral message in a channel
+func (api *Client) DeleteEphemeral() error {
+	json := []byte(`{
+    'response_type': 'ephemeral',
+    'text': '',
+    'replace_original': true,
+    'delete_original': true
+	}`)
+	var intf interface{}
+	endpoint := api.endpoint + "chat.update"
+	return postJSON(context.Background(), api.httpclient, endpoint, api.token, json, intf, api)
+}
+
 // DeleteMessage deletes a message in a channel
 func (api *Client) DeleteMessage(channel, messageTimestamp string) (string, string, error) {
 	respChannel, respTimestamp, _, err := api.SendMessageContext(context.Background(), channel, MsgOptionDelete(messageTimestamp))
