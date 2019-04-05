@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
-	"github.com/nlopes/slack/internal/timex"
+	"github.com/gtrindade/slack/internal/timex"
 )
 
 // ManageConnection can be called on a Slack RTM instance returned by the

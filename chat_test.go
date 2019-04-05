@@ -30,6 +30,28 @@ func TestPostMessageInvalidChannel(t *testing.T) {
 	}
 }
 
+func TestSendResponse(t *testing.T) {
+	messageText := "this a test message"
+	responseType := "random response type"
+	responseURL := "a response url"
+	api := New("testing-token", OptionAPIURL("http://"+serverAddr+"/"))
+
+	message := Msg{
+		ResponseType: responseType,
+		Text:         messageText,
+	}
+
+	response, err := api.SendResponse(responseURL, message)
+	if err != nil {
+		t.Errorf("Did not expect an error when sending a response to a URL; received: %s", err)
+		return
+	}
+	if response == nil {
+		t.Errorf("Expected a slack response")
+		return
+	}
+}
+
 func TestGetPermalink(t *testing.T) {
 	channel := "C1H9RESGA"
 	timeStamp := "p135854651500008"
