@@ -87,7 +87,7 @@ func (api *Client) DeleteEphemeral() error {
     'replace_original': true,
     'delete_original': true
 	}`)
-	var intf interface{}
+	intf := &SlackResponse{}
 	endpoint := api.endpoint + "chat.update"
 	return postJSON(context.Background(), api.httpclient, endpoint, api.token, json, intf, api)
 }
