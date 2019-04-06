@@ -79,16 +79,28 @@ func NewPostMessageParameters() PostMessageParameters {
 	}
 }
 
-// DeleteEphemeral deletes last ephemeral message in a channel
-func (api *Client) DeleteEphemeral(channel, messageTs, responseURL string) (*SlackResponse, error) {
-	json := []byte(`{
-    'response_type': 'ephemeral',
-    'text': '',
-    'replace_original': true,
-    'delete_original': true
-	}`)
+type responseURLPayload struct {
+	ResponseType    string `json:"response_type"`
+	Text            string `json:"text"`
+	ReplaceOriginal bool   `json:"replace_original"`
+	DeleteOriginal  bool   `json:"delete_original"`
+}
+
+// DeleteEphemeral deletes the ephemeral message, use the responseURL from the action payload in your ephemeral message. Only works for the interactive ones.
+func (api *Client) DeleteEphemeral(responseURL string) (*SlackResponse, error) {
+	payload := responseURLPayload{
+		ResponseType:    "ephemeral",
+		Text:            "",
+		ReplaceOriginal: true,
+		DeleteOriginal:  true,
+	}
+	payloadString, err := json.Marshal(payload)
+	if err != nil {
+		return nil, err
+	}
+	json := []byte(payloadString)
 	response := &SlackResponse{}
-	err := postJSON(context.Background(), api.httpclient, responseURL, api.token, json, response, api)
+	err = postJSON(context.Background(), api.httpclient, responseURL, api.token, json, response, api)
 	return response, err
 }
 
